@@ -39,12 +39,9 @@ def get_benchmarks():
     else:
         return load_results(BENCHMARK_PATH)
 
-def get_latest_runs():
-    latest_path = get_latest_path()
-    return load_results(latest_path)
-
 def test_regressions():
     latest_path = get_latest_path()
+    print(f"Evaluating {latest_path} against {BENCHMARK_PATH}...")    
     latest_runs = load_results(latest_path)
     benchmarks = get_benchmarks()
     for run_id, run in latest_runs.items():
