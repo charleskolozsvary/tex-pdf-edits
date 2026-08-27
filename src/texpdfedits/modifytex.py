@@ -145,7 +145,6 @@ def commentSource(
 
     %% START of correction ... and END of correction ...
     """
-    format = opt['comment_format']
     
     inserted_comments = [] #list of tuples where tuple[0] is the char_pos and tuple[1] is the inserted material
     for char_pos in char_positions:
@@ -155,10 +154,10 @@ def commentSource(
         for kind_and_corr in kinds_and_corrs:
             (kind, corr) = kind_and_corr
             if kind == 'start':
-                corr_descriptions.append(corr.asCommentStart(format))
+                corr_descriptions.append(corr.asCommentStart())
                 start_corr_idxs.append(corr.index)
             elif kind == 'end':
-                corr_descriptions.append(corr.asCommentEnd(format)) # new with 0.12.0
+                corr_descriptions.append(corr.asCommentEnd())
                 end_corr_idxs.append(corr.index)
             else:
                 assert False, f"Invalid kind of position '{kind}'."
@@ -170,7 +169,6 @@ def commentSource(
                 formatcomm.writeCallout(
                     end_corr_idxs,
                     'end',
-                    format
                 )
             )
 
@@ -187,7 +185,6 @@ def commentSource(
                 formatcomm.writeCallout(
                     start_corr_idxs,
                     'start',
-                    format
                 )
             )
 

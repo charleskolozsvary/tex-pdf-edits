@@ -24,7 +24,7 @@ def process_files(pdf_file: Path, latex_file: Path, **opt):
 
     if opt['delete_comments']:
         logger.info(f"Deleting comments from {latex_file}...")
-        _, nocomments_file = formatcomm.deleteComments(latex_file, opt['comment_format'])
+        _, nocomments_file = formatcomm.deleteComments(latex_file)
         logger.info(f"Done. Written to {nocomments_file}")
 
         utils.compile_validate_clean_replace(
@@ -217,18 +217,6 @@ def main():
         default=''
     )
     parser.add_argument(
-        "-f",
-        "--comment-format",
-        type=str,
-        help=(
-            'annotation comment format: '
-            f'{formatcomm.FORMAT_FRONT}, '
-            f'{formatcomm.FORMAT_SPLIT}, or {formatcomm.FORMAT_BACK}; '
-            f'default={formatcomm.DEFAULT_COMMENT_FORMAT}'
-        ),
-        default=formatcomm.DEFAULT_COMMENT_FORMAT
-    )
-    parser.add_argument(
         "-s",
         "--tex-start",
         type=str,
@@ -284,9 +272,6 @@ def main():
     if not args.merge_overlapping and args.autocorrect:
         raise RuntimeError("--auto requires --merge-overlapping; enable it or drop --auto")
 
-    if args.comment_format not in formatcomm.RECOGNIZED_FORMATS:
-        raise ValueError(f"Unrecognized comment format: '{args.comment_format}'")
-
     if not args.validate and args.replace:
         logger.info(f"--no-validate disables --replace; not overwriting {latex_file}")
         args.replace = False
@@ -313,7 +298,6 @@ def main():
         auto              = args.auto,
         adjust_annots     = args.adjust_annots,
         extra_mark_envs   = args.extra_mark_envs,
-        comment_format    = args.comment_format,
         delete_comments   = args.delete_comments,
         replace           = args.replace,
         tex_start         = args.tex_start,

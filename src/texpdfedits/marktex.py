@@ -432,12 +432,27 @@ def markNodes(
             )
             re_res = re.search(joined_regex, node_verbatim)
             if re_res is None:
-                err_message = (
-                    f"Environment node '{node_verbatim}' in "
-                    f"markNode was malformed or parsed incorrectly"
-                )
+                err_message = "Environment node was malformed or parsed incorrectly"
                 logger.critical(err_message)
+                partial_regex = joined_regex
+                span = None
+                while span is None:
+                    try:
+                        m = re.search(partial_regex, node_verbatim)
+                        if m is not None:
+                            span = m.span()
+                    finally:
+                        partial_regex = partial_regex[:-1]
+                with open("node_verbatim.txt", "w") as f:
+                    f.write(node_verbatim)
+                with open("joined_regex.txt", "w") as f:
+                    f.write(joined_regex)
+                with open("matches_until.txt", "w") as f:
+                    f.write(partial_regex)
+                with open("span.txt", "w") as f:
+                    f.write(str(span))
                 raise RuntimeError(err_message)
+            
             aft_begin_sp, bef_args_sp, aft_end_sp = re_res.groups()
                 
             if node.envname in allowed_environments or node.envname in ONLY_MARK_CAPTION_ENVS:

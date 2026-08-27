@@ -668,23 +668,23 @@ class Correction:
     def __repr__ (self):
         return str(self)
 
-    def asCommentStart(self, format: str):
+    def asCommentStart(self) -> str:
         import texpdfedits.formatcomm as formatcomm        
         replies = '", "'.join(
             utils.sanitize_pdf_text(reply)
             for reply in self.messages['responses']
         )
-        return formatcomm.startComment(self, format, replies)
+        return formatcomm.startComment(self, replies)
         
-    def asCommentEnd(self, format: str):
+    def asCommentEnd(self) -> str:
         import texpdfedits.formatcomm as formatcomm
         replies = '", "'.join(
             utils.sanitize_pdf_text(reply)
             for reply in self.messages['responses']
         )
-        return formatcomm.endComment(self, format, replies)
+        return formatcomm.endComment(self, replies)
     
-    def asMarkdownPrompt(self):
+    def asMarkdownPrompt(self) -> str:
         replies = markdownReplies(self.messages['responses'])
         return rf"""### Annotation: {self.type[1]}
 
